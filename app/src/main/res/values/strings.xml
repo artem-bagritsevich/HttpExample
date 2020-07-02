@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">HttpExample</string>
+
+    <!-- toast messages -->
+    <string name="error_unsuccessful_request">Request returned bad request code. Code: %1$d</string>
+    <string name="error_exception">Request error (Exception)</string>
+    <string name="successful_request">Request successful</string>
+
 </resources>
