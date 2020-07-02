@@ -1,0 +1,20 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "To Kill a Mockingbird"
+    },
+    {
+      "id": 2,
+      "title": "One Hundred Years of Solitude"
+    },
+    {
+      "title": "The Book Thief",
+      "id": 3
+    },
+    {
+      "title": "Gone with the wind",
+      "id": 4
+    }
+  ]
+}
