@@ -1,10 +1,15 @@
-package com.example.httpexample
+package com.example.httpexample.ui
 
 import android.os.Bundle
-import android.widget.Toast
+import android.view.MenuItem
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.httpexample.R
+import com.example.httpexample.util.BOOKS_URI
+import com.example.httpexample.util.ENDPOINT
+import com.example.httpexample.util.TITLE
+import com.example.httpexample.util.toast
+import kotlinx.android.synthetic.main.activity_okhttp.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -12,11 +17,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import java.util.concurrent.TimeUnit
 
-private const val ENDPOINT = "http://10.0.2.2:3000"  // Im using json-server running on my localhost and emulator
-private const val BOOKS_URI = "/books"
-private const val TITLE = "title"
-
-class MainActivity : AppCompatActivity() {
+class OkHttpActivity : AppCompatActivity() {
 
     private val okHttpClient by lazy {
         OkHttpClient().newBuilder().connectTimeout(10, TimeUnit.SECONDS).build()
@@ -25,9 +26,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        button.setOnClickListener {
-            val book = editText.text
+        setContentView(R.layout.activity_okhttp)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        buttonAddBook2.setOnClickListener {
+            val book = editTextBookName2.text
             Thread {
                 addBook(book.toString())
             }.start()
@@ -60,42 +63,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 runOnUiThread {
-                    textView.text = bookList.reduce { acc, s -> "$acc\n$s" }
+                    textViewBookList2.text = bookList.reduce { acc, s -> "$acc\n$s" }
                 }
             }
         } catch (e: Exception) {
             toast(getString(R.string.error_exception))
             e.printStackTrace()
         }
-
-        /*val httpUrlConnection = URL(ENDPOINT + BOOKS_URI).openConnection() as HttpURLConnection
-        httpUrlConnection.apply {
-            connectTimeout = 10000 // 10 seconds
-            requestMethod = "GET"
-            doInput = true
-        }
-        if (httpUrlConnection.responseCode != HttpURLConnection.HTTP_OK) {
-            // show error toast
-            return
-        }
-        val streamReader = InputStreamReader(httpUrlConnection.inputStream)
-        var text: String = ""
-        streamReader.use {
-            text = it.readText()
-        }
-
-        val books = mutableListOf<String>()
-        val json = JSONArray(text)
-        for (i in 0 until json.length()) {
-            val jsonBook = json.getJSONObject(i)
-            val title = jsonBook.getString(TITLE)
-            books.add(title)
-        }
-        httpUrlConnection.disconnect()
-
-        Handler(Looper.getMainLooper()).post {
-            textView.text = books.reduce { acc, s -> "$acc\n$s" }
-        }*/
     }
 
     @WorkerThread
@@ -119,28 +93,12 @@ class MainActivity : AppCompatActivity() {
             toast(getString(R.string.error_exception))
             e.printStackTrace()
         }
-
-        /*val httpUrlConnection = URL(ENDPOINT + BOOKS_URI).openConnection() as HttpURLConnection
-        val body = JSONObject().apply {
-            put(TITLE, book)
-        }
-        httpUrlConnection.apply {
-            connectTimeout = 10000 // 10 seconds
-            requestMethod = "POST"
-            doOutput = true
-            setRequestProperty("Content-Type", "application/json")
-        }
-        OutputStreamWriter(httpUrlConnection.outputStream).use {
-            it.write(body.toString())
-        }
-        httpUrlConnection.responseCode
-        httpUrlConnection.disconnect()
-        getBooksAndShowIt()*/
     }
-}
 
-fun AppCompatActivity.toast(text: String) {
-    runOnUiThread {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return true
     }
 }
